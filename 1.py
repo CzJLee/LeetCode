@@ -1,16 +1,15 @@
 class Solution:
 	def twoSum(self, nums: List[int], target: int) -> List[int]:
-		# Fine, O(n^2) solution it is then
-		pointer_start = 0
-		pointer_end = int(len(nums) - 1)
+		# Use dict to quickly find indices of values
+		nums_hash = {}
 
-		while pointer_end > 0:
-			if nums[pointer_start] + nums[pointer_end] == target:
-				return [pointer_start, pointer_end]
-			else:
-				pointer_start += 1
-				if pointer_start >= pointer_end:
-					pointer_end -= 1
-					pointer_start = 0
-		
-		return None
+		for i in range(len(nums)):
+			# Starting with a value nums[i], we know that we want to look for a value that is target - nums[i]
+			desired_value = target - nums[i]
+
+			if desired_value in nums_hash:
+				# If the sum is found, return it
+				return [i, nums_hash[desired_value]]
+
+			# Otherwise, add nums[i] to the hash.
+			nums_hash[nums[i]] = i
