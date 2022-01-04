@@ -1,25 +1,16 @@
 class Solution:
 	def twoSum(self, nums: List[int], target: int) -> List[int]:
-		# Sort the list
-		sorted_nums = sorted(nums)
-		# Start by adding the largest and smallest. 
-		# If the sum is larger than the target, move on to the next value. 
-		# If the sum is smaller than the target, try the next value larger than smallest.
-		start_pointer = 0
-		end_pointer = int(len(sorted_nums) - 1)
+		# Fine, O(n^2) solution it is then
+		pointer_start = 0
+		pointer_end = int(len(nums) - 1)
 
-		while start_pointer < end_pointer:
-			if sorted_nums[start_pointer] + sorted_nums[end_pointer] > target:
-				start_pointer = 0
-				end_pointer -= 1
-			elif sorted_nums[start_pointer] + sorted_nums[end_pointer] < target:
-				start_pointer += 1
+		while pointer_end > 0:
+			if nums[pointer_start] + nums[pointer_end] == target:
+				return [pointer_start, pointer_end]
 			else:
-				# Get the two correct values to find their index in the original list
-				index_a = nums.index(sorted_nums[start_pointer])
-				index_b = nums.index(sorted_nums[end_pointer])
-				# Return list of indices
-				return sorted([index_a, index_b])
+				pointer_start += 1
+				if pointer_start >= pointer_end:
+					pointer_end -= 1
+					pointer_start = 0
 		
 		return None
-
