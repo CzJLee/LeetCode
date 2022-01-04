@@ -15,7 +15,11 @@ class Solution:
 			elif sorted_nums[start_pointer] + sorted_nums[end_pointer] < target:
 				start_pointer += 1
 			else:
-				return [start_pointer, end_pointer]
+				# Get the two correct values to find their index in the original list
+				index_a = nums.index(sorted_nums[start_pointer])
+				index_b = nums.index(sorted_nums[end_pointer])
+				# Return list of indices
+				return sorted([index_a, index_b])
 		
 		return None
 
