@@ -2,20 +2,24 @@ class Solution:
 	def threeSum(self, nums: list[int]) -> list[list[int]]:
 		if len(nums) < 3:
 			return []
-		elif len(nums) == 3 and sum(nums) == 0:
-			return [nums]
 
+		target = 0
+		
 		sol_set = []
 
+		nums.sort()
+
 		for i in range(len(nums)):
-			div_set = nums[i+1:]
-			target = 0 - nums[i]
-			two_sol = self.twoSum(div_set, target)
-			if two_sol:
-				for j, k in two_sol:
-					if sorted([nums[i], div_set[j], div_set[k]]) not in sol_set:
-						sol_set.append(sorted([nums[i], div_set[j], div_set[k]]))
-		
+			if nums[i] > target:
+				break
+			else:
+				two_sols = self.twoSum(nums[i+1:], target - nums[i])
+			if two_sols:
+				for j, k in two_sols:
+					sol = sorted([nums[i], nums[i+j+1], nums[i+k+1]])
+					if sol not in sol_set:
+						sol_set.append(sol)
+
 		return sol_set
 			
 
