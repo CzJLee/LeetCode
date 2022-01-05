@@ -8,7 +8,7 @@ class Solution:
 		sol_set = []
 
 		for i in range(len(nums)):
-			div_set = nums[:i] + nums[i+1:]
+			div_set = nums[i+1:]
 			target = 0 - nums[i]
 			two_sol = self.twoSum(div_set, target)
 			if two_sol:
