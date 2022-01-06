@@ -24,7 +24,7 @@ class Solution:
 		centers = []
 		for p1 in range(len(darts)):
 			for p2 in range(p1, len(darts)):
-				center = self.find_circle(darts[p1], darts[p2], r)
+				center = self.find_circle_trig(darts[p1], darts[p2], r)
 				centers.extend(center)
 		
 		# Test how many points are inside the circle, centered at every center. 
@@ -38,6 +38,66 @@ class Solution:
 			max_num_points = max(max_num_points, num_points_contained)
 		
 		return max_num_points
+	
+	def find_circle_trig(self, p1, p2, r):
+		"""
+		Return a list of center coordinates for a circle with radius r that passes through the given two points.
+
+		Args:
+			p1 (tuple): First point
+			p2 (tuple): Second point
+			r (float): Radius of circle
+
+		Returns:
+			tuple: List of coordinates of center of circle
+		"""
+		center = []
+
+		x1, y1 = p1[0], p1[1]
+		x2, y2 = p2[0], p2[1]
+
+		dist = math.sqrt((x1-x2)**2 + (y1-y2)**2)
+
+		if dist > r*2:
+			# No points possible
+			return center
+
+		# Determine the center point between the two points. 
+		center_point = ( (x1+x2)/2, (y1+y2)/2 )
+
+		if dist == r*2 or dist == 0:
+			# One point possible, circle is in the center of the points. 
+			# Or if dist == 0, then points overlap
+			center.append(center_point)
+			return center
+		
+		# Find the equation of a circle that passes through both points. 
+		# Okay, So I know that the center of the circle has to be on the line perpendicular to the line connecting the two points. 
+		# We actually have a right triangle, where the hypotenuse is the radius of the circle. One side length is half the distance of the chord, and we can use pythag theorm to find the last side length. 
+
+		chord_perp_dist = math.sqrt(r**2 - (dist/2)**2)
+		
+		# So now we have a distance from the center point along the line perp to the chord. We can find the center points of the circle by traveling that distance. We want to use the slope of this line. 
+
+		# Needs a handler if the chord slope is vertical. 
+		if x2 - x1 == 0:
+			angle = 0
+		elif (y2 - y1) == 0:
+			angle = math.pi/2
+		else:
+			chord_slope = (y2 - y1) / (x2 - x1)
+			perp_slope = - 1 / chord_slope
+			angle = math.atan(perp_slope)
+
+		# The center can be determined by moving a distance chord_perp_dist along the perp_chord line. 
+		# You can use trig and angles to get the travel distance from the center point
+		circle_center_x1 = center_point[0] + chord_perp_dist * math.cos(angle)
+		circle_center_x2 = center_point[0] - chord_perp_dist * math.cos(angle)
+		circle_center_y1 = center_point[1] + chord_perp_dist * math.sin(angle)
+		circle_center_y2 = center_point[1] - chord_perp_dist * math.sin(angle)
+
+		center = [(circle_center_x1, circle_center_y1), (circle_center_x2, circle_center_y2)]
+		return center
 
 	def find_circle(self, p1, p2, r):
 		"""
@@ -82,7 +142,7 @@ class Solution:
 		# Needs a handler if the chord slope is vertical. 
 		if x2 - x1 == 0:
 			chord_slope = None
-			perp_spope = 0
+			perp_slope = 0
 		else:
 			chord_slope = (y2 - y1) / (x2 - x1)
 
@@ -105,10 +165,10 @@ class Solution:
 
 		else:
 			if chord_slope is not None:
-				perp_spope = - 1 / chord_slope
+				perp_slope = - 1 / chord_slope
 
 			# b = y - m*x
-			y_int = (center_point[1]) - (perp_spope) * (center_point[0])
+			y_int = (center_point[1]) - (perp_slope) * (center_point[0])
 
 			# Solve r^2 = (a - x)**2 + (b - y)**2
 			# Using y = perp_slope * x + y_int
@@ -117,7 +177,7 @@ class Solution:
 			# x == (a + b m - d m - Sqrt[-b^2 + 2 b d - d^2 + 2 a b m - 2 a d m - a^2 m^2 + r^2 + m^2 r^2])/(1 + m^2)
 			# x == (a + b m - d m + Sqrt[-b^2 + 2 b d - d^2 + 2 a b m - 2 a d m - a^2 m^2 + r^2 + m^2 r^2])/(1 + m^2)
 
-			m = perp_spope
+			m = perp_slope
 			d = y_int
 			a = x1
 			b = y1
