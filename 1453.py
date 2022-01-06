@@ -65,8 +65,9 @@ class Solution:
 		# Determine the center point between the two points. 
 		center_point = ( (x1+x2)/2, (y1+y2)/2 )
 
-		if dist == r*2:
+		if dist == r*2 or dist == 0:
 			# One point possible, circle is in the center of the points. 
+			# Or if dist == 0, then points overlap
 			center.append(center_point)
 			return center
 		
