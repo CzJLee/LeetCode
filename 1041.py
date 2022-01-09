@@ -7,7 +7,6 @@ class Solution:
 		dir = np.array([0, 1])
 		left = np.array([[0, -1], [1, 0]])
 		right = np.array([[0, 1], [-1, 0]])
-		instructions = instructions * 4
 
 		for inst in instructions:
 			if inst == "G":
@@ -17,4 +16,4 @@ class Solution:
 			elif inst == "R":
 				dir = np.matmul(right, dir)
 		
-		return np.array_equal(np.array([0, 0]), pos)
+		return np.array_equal(np.array([0, 0]), pos) or not np.array_equal(np.array([0, 1]), dir)
