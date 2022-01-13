@@ -2,7 +2,7 @@ class Solution {
 public:
     bool isHappy(int n) {
         unordered_set <int> seen;
-        
+
         while (n != 1) {
             n = digitSumSquares(n);
             // Check if n has been seen
