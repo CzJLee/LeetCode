@@ -1,6 +1,8 @@
-# Implement the intersection over union of two bounding boxes. Please define a bounding 
-# box class and create any helper functions needed. 
-# Please be sure to explain your logic and reasoning as you go
+# In some machine learning and computer vision applications, it is useful to find the Intersection Over Union (IOU). 
+# Implement the intersection over union of two bounding boxes. 
+# Consider an image, and a machine learning program outputs the coordinates of bounding boxes within the image. 
+# We want to find the ratio of intersected area vs union area. 
+# 
 # |---------------|
 # |               |
 # |        --------------|
@@ -39,8 +41,8 @@ def iou(roi1, roi2):
 
 if __name__ == "__main__":
 	# Case: 1 intersection
-	roi1 = [[0, 0], [5, 3]]
-	roi2 = [[2, 2], [10, 10]]
+	roi1 = [[0, 0], [4, 4]]
+	roi2 = [[2, 2], [6, 6]]
 	print(iou(roi1, roi2))
 
 	# Case: No intersection
@@ -53,7 +55,17 @@ if __name__ == "__main__":
 	roi2 = [[2, 2], [4, 4]]
 	print(iou(roi1, roi2))
 
+	# Case: Overlap
+	roi1 = [[1, 2], [4, 4]]
+	roi2 = [[1, 2], [4, 4]]
+	print(iou(roi1, roi2))
+
 	# Case: 2 intersection
 	roi1 = [[0, 0], [4, 4]]
 	roi2 = [[2, 0], [6, 4]]
+	print(iou(roi1, roi2))
+
+	# Case: Shared edge
+	roi1 = [[0, 0], [4, 4]]
+	roi2 = [[4, 0], [6, 4]]
 	print(iou(roi1, roi2))
