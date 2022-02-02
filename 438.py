@@ -1,34 +1,30 @@
 # https://leetcode.com/problems/find-all-anagrams-in-a-string/
 from collections import Counter
 class Solution:
-	def check_anagram(self, s, p):
-		s_count = Counter(s)
-		p_count = Counter(p)
-		return s_count == p_count
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        ns, np = len(s), len(p)
+        if ns < np:
+            return []
 
-	def findAnagrams(self, s: str, p: str) -> List[int]:
-		# First check inclusiveness, then check anagram
-		p_set = set(list(p))
-		p_len = len(p)
-		s_len = len(s)
-		anagrams = []
-		counter = 0
-		i = 0
-		while i < s_len:
-			c = s[i]
-			if counter == p_len:
-				if self.check_anagram(s[i-p_len:i], p):
-					anagrams.append(i-p_len)
-				counter -= 1
-				continue
-			elif c in p_set:
-				counter += 1
-			else:
-				counter = 0
-			i += 1
-		# Final check
-		if counter == p_len:
-			if self.check_anagram(s[i-p_len:i], p):
-				anagrams.append(i-p_len)
-		
-		return anagrams
+        p_count = Counter(p)
+        s_count = Counter()
+        
+        output = []
+        # sliding window on the string s
+        for i in range(ns):
+            # add one more letter 
+            # on the right side of the window
+            s_count[s[i]] += 1
+            # remove one letter 
+            # from the left side of the window
+            if i >= np:
+                if s_count[s[i - np]] == 1:
+                    del s_count[s[i - np]]
+                else:
+                    s_count[s[i - np]] -= 1
+            # compare array in the sliding window
+            # with the reference array
+            if p_count == s_count:
+                output.append(i - np + 1)
+        
+        return output
