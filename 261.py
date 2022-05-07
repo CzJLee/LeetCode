@@ -70,3 +70,8 @@ class FastSolution:
             # Handle cycles
             return x != y
         return all(map(union, edges))
+
+# [[0,1], [1,2], [2, 0], [3, 4]]
+# 0 1
+# 1 2
+# 2 2
