@@ -58,11 +58,15 @@ class FastSolution:
     def validTree(self, n, edges):
         if len(edges) != n - 1:
             return False
-        parent = list(range(n))
+        root = list(range(n))
         def find(x):
-            return x if parent[x] == x else find(parent[x])
+            if root[x] == x:
+                return x
+            else:
+                return find(root[x])
         def union(xy):
             x, y = map(find, xy)
-            parent[x] = y
+            root[x] = y
+            # Handle cycles
             return x != y
         return all(map(union, edges))
