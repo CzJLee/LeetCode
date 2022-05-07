@@ -1,15 +1,14 @@
+# https://leetcode.com/problems/graph-valid-tree/submissions/
+
 class Solution:
-    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
         class DisjointSet():
-            def __init__(self, isConnected):
-                self.root = [i for i in range(len(isConnected))]
-                self.rank = [1 for _ in range(len(isConnected))]
+            def __init__(self, edges, n):
+                self.root = [i for i in range(n)]
+                self.rank = [1 for _ in range(n)]
                 
-                
-                for i, row in enumerate(isConnected):
-                    for j, connected in enumerate(row):
-                        if connected:
-                            self.join(i, j)
+                for edge in edges:
+                    self.join(edge[0], edge[1])
                 
             def find_root(self, x):
                 if x == self.root[x]:
@@ -35,23 +34,21 @@ class Solution:
                         # Both have equal rank
                         self.root[y_root] = x_root
                         self.rank[x_root] += 1
-                    
+                        
             def is_connected(self, x, y):
                 return self.find_root(x) == self.find_root(y)
-    
+                        
         # Create set
-        cities = DisjointSet(isConnected)
+        tree = DisjointSet(edges, n)
         
-        # Unique Roots
-        roots = set()
-        for i in range(len(isConnected)):
-            roots.add(cities.find_root(i))
-            
-            
-        return len(roots)
-            
-                
-                    
-                
-            
+        # Check if fully connected
+        for i in range(n):
+            for j in range(i+1, n):
+                if not tree.is_connected(i, j):
+                    return False
+        
+        # Check number of edges
+        num_edges = len(edges)
+        
+        return num_edges == n-1
         
