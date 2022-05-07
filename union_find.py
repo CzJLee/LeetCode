@@ -10,7 +10,7 @@ class UnionFind:
 
         if edges:
             for edge in edges:
-                self.union(edge)
+                self.union(*edge)
 
     # The find function here is the same as that in the disjoint set with path compression.
     def find(self, x):
