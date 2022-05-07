@@ -40,6 +40,8 @@ class Solution:
                         
         # Create set
         tree = DisjointSet(edges, n)
+
+        # Valid tree if fully connected and number of edges is exactly n-1
         
         # Check if fully connected
         for i in range(n):
