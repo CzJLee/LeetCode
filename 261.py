@@ -1,4 +1,4 @@
-# https://leetcode.com/problems/graph-valid-tree/submissions/
+# https://leetcode.com/problems/graph-valid-tree
 
 class Solution:
     def validTree(self, n: int, edges: List[List[int]]) -> bool:
