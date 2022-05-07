@@ -54,3 +54,15 @@ class Solution:
         
         return num_edges == n-1
         
+class FastSolution:
+    def validTree(self, n, edges):
+        if len(edges) != n - 1:
+            return False
+        parent = list(range(n))
+        def find(x):
+            return x if parent[x] == x else find(parent[x])
+        def union(xy):
+            x, y = map(find, xy)
+            parent[x] = y
+            return x != y
+        return all(map(union, edges))
