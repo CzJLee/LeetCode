@@ -4,7 +4,6 @@ class Solution:
     def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:
         path_stack = []
         valid_paths = []
-        seen = set()
         
         end = len(graph) - 1
         
