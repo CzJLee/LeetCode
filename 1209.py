@@ -1,4 +1,4 @@
-# https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/submissions/
+# https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii
 
 class Solution:
     def removeDuplicates(self, s: str, k: int) -> str:
