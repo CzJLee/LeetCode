@@ -2,52 +2,41 @@
 
 class Solution:
     def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
-        # BFS
-        goal = (len(grid)-1 , len(grid)-1)
         
-        start = (0, 0)
-        if grid[start[0]][start[1]] != 0 or grid[goal[0]][goal[1]] != 0:
+        max_row = len(grid) - 1
+        max_col = len(grid[0]) - 1
+        directions = [
+            (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+        
+        # Helper function to find the neighbors of a given cell.
+        def get_neighbours(row, col):
+            for row_difference, col_difference in directions:
+                new_row = row + row_difference
+                new_col = col + col_difference
+                if not(0 <= new_row <= max_row and 0 <= new_col <= max_col):
+                    continue
+                if grid[new_row][new_col] != 0:
+                    continue
+                yield (new_row, new_col)
+        
+        # Check that the first and last cells are open. 
+        if grid[0][0] != 0 or grid[max_row][max_col] != 0:
             return -1
         
-        visited = [[0 for _ in range(goal[1] + 1)] for _ in range(goal[0] + 1)]
+        # Set up the BFS.
+        queue = deque()
+        queue.append((0, 0))
+        grid[0][0] = 1 
         
-        queue = [[start]]
-        
-        def get_valid_neighbors(node):
-            perm = [-1, 1, 0]
-            
-            possible_neighbors = []
-            
-            for x in perm:
-                for y in perm:
-                    possible_neighbors.append((node[0] + x, node[1] + y))
-            possible_neighbors.pop()
-            
-            valid_neighbors = []
-            
-            for neighbor in possible_neighbors:
-                if neighbor[0] <= goal[0] and neighbor[0] >= 0 and neighbor[1] <= goal[1] and neighbor[1] >= 0:
-                    if grid[neighbor[0]][neighbor[1]] == 0:
-                        valid_neighbors.append(neighbor)
-                        
-            return valid_neighbors
-        
+        # Carry out the BFS.
         while queue:
-            path = queue.pop(0)
-            node = path[-1]
-            visited[node[0]][node[1]] = 1
-            
-            if node == goal:
-                return len(path)
-            
-            # Get neighbors
-            neighbors = get_valid_neighbors(node)
-            
-            for neighbor in neighbors:
-                if visited[neighbor[0]][neighbor[1]] == 0:
-                    queue.append(path + [neighbor])
-                    
-        return -1
-                    
+            row, col = queue.popleft()
+            distance = grid[row][col]
+            if (row, col) == (max_row, max_col):
+                return distance
+            for neighbour_row, neighbour_col in get_neighbours(row, col):
+                grid[neighbour_row][neighbour_col] = distance + 1
+                queue.append((neighbour_row, neighbour_col))
         
-            
+        # There was no path.
+        return -1
