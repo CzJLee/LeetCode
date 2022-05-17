@@ -3,6 +3,8 @@
 class Solution:
     def divide(self, dividend: int, divisor: int) -> int:
         # Implement floor division
+        if dividend == -(2**31) and divisor == -1:
+            return (2**31 - 1)
         
         # XOR
         negative = (dividend >= 0) ^ (divisor >= 0)
@@ -30,12 +32,7 @@ class Solution:
         _, q = log_div(a, b, 1)
         
         if negative:
-            q = -q
-            if q < -(2 ** 31):
-                return -(2 ** 31)
-            return q
+            return -q
         else:
-            if q > (2 ** 31 - 1):
-                return 2 ** 31 - 1
             return q
         
