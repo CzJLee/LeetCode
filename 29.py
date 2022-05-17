@@ -3,6 +3,8 @@
 class Solution:
     def divide(self, dividend: int, divisor: int) -> int:
         # Implement floor division
+
+        # Check edge case
         if dividend == -(2**31) and divisor == -1:
             return (2**31 - 1)
         
