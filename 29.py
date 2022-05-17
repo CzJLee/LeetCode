@@ -14,15 +14,13 @@ class Solution:
         
         if a - b < 0:
             return 0
-            
+
         def log_div(a, b, n):
-            if a - b < 0:
-                return 0, 0
+            if a - b - b < 0:
+                return a - b, n
             else:
                 remainder, quotient = log_div(a, b+b, n+n)
-                if quotient == 0:
-                    return a - b, n
-                elif remainder >= b:
+                if remainder >= b:
                     remainder -= b
                     quotient += n
                     return remainder, quotient
