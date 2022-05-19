@@ -1,3 +1,4 @@
 test*
 .vscode/
 interview_problems/ 
+.DS_Store
