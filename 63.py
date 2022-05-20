@@ -12,9 +12,6 @@ class Solution:
         if obstacleGrid[height-1][width-1] == 1 or obstacleGrid[0][0] == 1:
             return 0
         
-        visit_count = [[0] * width for _ in range(height)]
-        visit_count[0][0] = 1
-        
         @functools.cache
         def visit(h, w):
             if h < 0 or w < 0 or obstacleGrid[h][w] == 1:
