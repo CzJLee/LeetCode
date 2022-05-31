@@ -13,3 +13,4 @@ class Solution:
                 if all([char not in letters for char in words[j]]):
                     max_val = max(max_val, len(words[i]) * len(words[j]))
         return max_val
+
