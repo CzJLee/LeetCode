@@ -30,16 +30,18 @@ class Solution:
         # Sort words by length
         words.sort(key = len)
 
+        # Create word to index mapping
+        word_dict = {word: i for i, word in enumerate(words)}
+
         # Init list to 1's
         longest_chain = [1 for _ in range(len(words))]
 
-        # For each next word, find all previous words that can be a precursor, and take max + 1
-        for n in range(len(words)):
+        for n, word in enumerate(words):
             indices_of_valid_precursors = []
-            for i in range(n):
-                # Find all valid precursors 
-                if is_precursor(words[i], words[n]):
-                    indices_of_valid_precursors.append(i)
+            for i in range(len(word)):
+                precursor = word[:i] + word[i+1:]
+                if precursor in word_dict:
+                    indices_of_valid_precursors.append(word_dict[precursor])
             longest_chain[n] = max([longest_chain[i] for i in indices_of_valid_precursors], default=0) + 1
 
         return max(longest_chain)
