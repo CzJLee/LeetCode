@@ -45,3 +45,12 @@ class Solution:
             longest_chain[n] = max([longest_chain[i] for i in indices_of_valid_precursors], default=0) + 1
 
         return max(longest_chain)
+
+class Solution:
+    def longestStrChain(self, words):
+        # Even simpler
+        dp = {}
+        for word in sorted(words, key=len):
+            # Check every single possible precursor word with one letter removed
+            dp[word] = max(dp.get(word[:i] + word[i + 1:], 0) + 1 for i in range(len(word)))
+        return max(dp.values())
