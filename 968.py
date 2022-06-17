@@ -14,125 +14,49 @@ class TreeNode:
         self.left = left
         self.right = right
 
+node_info = namedtuple("Node", ["has_camera", "covered", "num_cameras"])
 
 class Solution:
     def minCameraCover(self, root: Optional[TreeNode]) -> int:
-        # Combine Dynamic programming with BFS traversal 
 
-        # Rules:
-        # Use BFS to start from the children and work your way up
-        # If a node has no descendants, give it's parent a camera
-        # If a node has children, and no children have cameras, give the node a camera
+        def mark_node(node) -> node_info:
+            """
+            Recursive function to keep track of which nodes have a camera, and which are covered. 
+            """
+            # Rule 1: If a node has no descendants, give its parent a camera
+            # Rule 2: Only give a node a camera if one of its children are uncovered
 
-        # Use Recursion
-        # Base Case: A node has no children -> Tell its parent to use a camera 
-        # At each step, check if node has children. 
-            # If not, then tell its parents to use a camera
-            # Else, add a camera to the node if none of the children have cameras 
-        # All node values are initiated to 0. Use node.val = 1 to mark it as a camera 
-
-        # BFS Queue to step through the tree
-        queue = deque()
-        queue.append(root)
-
-        # Counter to keep track of number of cameras added
-        num_cameras = 0
-
-        # node = root
-
-        # if node.left is None and node.right is None:
-        #     # Node has no children 
-        #     # Use -1 to mark a node with no children 
-        #     node.val = -1
-        #     return
-
-        # left, right = get_child_values(node)
-        # if left is None and right is None:
-        #     # Node has no children 
-        #     # Use -1 to mark a node with no children 
-        #     node.val = -1
-        #     return
-        # elif left == -1 or right == -1:
-        #     # It is the parent of a node with no children
-        #     # Following the rule, give this a camera
-        #     node.val = 1
-        #     num_cameras += 1
-        #     return
-        # elif not left and not right:
-        #     # Both left and right are either 0 or None
-        #     # Following the rule, give this a camera
-        #     node.val = 1
-        #     num_cameras += 1
-        #     return
-
-        # if left is None and right is None:
-        #     # Node has no children 
-        #     # Use -1 to mark a node with no children 
-        #     return -1
-        # if left + right <= 0:
-        #     # Add a camera
-        #     return 1
-        # elif left == -1 or right == -1:
-        #     # It is the parent of a node with no children
-        #     # Following the rule, give this a camera
-        #     node.val = 1
-        #     num_cameras += 1
-        #     return
-
-        
-        # def get_child_values(node):
-        #     left_value = node.left.val if node.left else None
-        #     right_value = node.right.val if node.right else None
-        #     return (left_value, right_value)
-
-        def mark_node(node):
+            # Base case
             if node is None:
-                # Base case
-                return None, 0
+                # Return covered = True, so that any leaf node (with no children) will default to no camera and no coverage, forcing the parent to have a camera. This follows rule 1. 
+                return node_info(has_camera=False, covered=True, num_cameras=0)
 
-            left_mark, left_cameras = mark_node(node.left)
-            right_mark, right_cameras = mark_node(node.right)
-            if left_mark is None and right_mark is None:
-                # Base case
-                # node.val = -1
-                return -1, 0
-            if left_mark == -1 or right_mark == -1:
-                # It is the parent of a node with no children
-                # Following the rule, give this a camera
-                # node.val = 1
-                # num_cameras += 1
-                return 1, 1 + left_cameras + right_cameras
-            if not left_mark and not right_mark:
-                # Both left and right are either 0 or None
-                # Following the rule, give this a camera
-                # node.val = 1
-                # num_cameras += 1
-                return 1, 1 + left_cameras + right_cameras
+            # Recursive calls, update left and right, and get values
+            left_has_camera, left_covered, left_num_cameras = mark_node(node.left)
+            right_has_camera, right_covered, right_num_cameras = mark_node(node.right)
+
+            total_num_cameras = left_num_cameras + right_num_cameras
+
+            # Rule 2: Only give a node a camera if at least one of its children are uncovered
+            if left_covered and right_covered:
+                # If all children are covered, we do not need to have a camera
+                has_camera = False
+                if left_has_camera or right_has_camera:
+                    # If any children has a camera, the parent is covered
+                    covered = True
+                else:
+                    covered = False
             else:
-                # At least one child has a camera, do not give this node a camera
-                return 0, left_cameras + right_cameras
-
-        if root.left is None and root.right is None:
-            return 1
-
-        mark, num_cameras = mark_node(root)
-
-        return num_cameras
-
+                # At least one child is uncovered, we need to have a camera
+                has_camera = True
+                covered = True
+                # Increase camera count
+                total_num_cameras += 1
             
-            # # Add a camera to the node if none of its children have cameras 
-            # if mark_node(node.left) == -1 or mark_node(node.right) == -1:
-            #     # It is the parent of a node with no children
-            #     # Following the rule, give this a camera
-            #     node.val = 1
-            #     num_cameras += 1
-            #     return 1
-            
-            # elif not mark_node(node.left) and not mark_node(node.right):
-            #     # Both left and right are either 0 or None
-            #     # Following the rule, give this a camera
-            #     node.val = 1
-            #     num_cameras += 1
-            #     return
+            return node_info(has_camera, covered, total_num_cameras)
 
+        root_has_camera, root_covered, root_num_cameras = mark_node(root)
+        if not root_covered:
+            root_num_cameras += 1
 
+        return root_num_cameras
