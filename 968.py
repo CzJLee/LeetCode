@@ -35,6 +35,7 @@ class Solution:
             left_has_camera, left_covered, left_num_cameras = mark_node(node.left)
             right_has_camera, right_covered, right_num_cameras = mark_node(node.right)
 
+            # Keep track of total number of cameras added so far
             total_num_cameras = left_num_cameras + right_num_cameras
 
             # Rule 2: Only give a node a camera if at least one of its children are uncovered
@@ -55,8 +56,8 @@ class Solution:
             
             return node_info(has_camera, covered, total_num_cameras)
 
-        root_has_camera, root_covered, root_num_cameras = mark_node(root)
+        root_has_camera, root_covered, total_num_cameras = mark_node(root)
         if not root_covered:
-            root_num_cameras += 1
+            total_num_cameras += 1
 
-        return root_num_cameras
+        return total_num_cameras
