@@ -28,6 +28,7 @@ class Solution:
                 if word[i] != char:
                     end = j
                     break
+            # Slice the list keeping only words that satisfy our search terms. 
             products = products[start:end]
             results.append(products[:3])
 
