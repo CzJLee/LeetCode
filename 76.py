@@ -47,21 +47,30 @@ class Solution:
         # Save that part of the string.
         # Continue.
         start = 0
-        end = 0
+        end = len(t)
+
+        t_counts = collections.Counter(t)
+        window_counts = collections.Counter(s[start:end])
 
         shortest_substring = s
 
-        while end < len(s):
-            end += 1
-            if self.is_substring(s[start:end], t):
-                new_start = end - len(t)
-                while new_start >= start:
-                    if self.is_substring(s[new_start:end], t):
-                        window = s[new_start : end]
-                        if len(window) < len(shortest_substring):
-                            shortest_substring = window
-                        break
-                    new_start -= 1
-                start = new_start
+        while end < len(s) + 1:
+            if t_counts <= window_counts:
+                # Is substring.
+                # print(f"Is a substring {s[start:end]}")
+                if len(s[start:end]) < len(shortest_substring):
+                    shortest_substring = s[start:end]
+                # Contract start.
+                start += 1
+                window_counts[s[start - 1]] -= 1
+            else:
+                # Not substring.
+                # Expand end.
+                # print(f"Not a substring {s[start:end]}")
+                end += 1
+                if end > len(s):
+                    break
+                window_counts[s[end - 1]] += 1
+
 
         return shortest_substring
