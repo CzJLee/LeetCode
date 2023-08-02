@@ -42,10 +42,10 @@ class Solution:
 
         # Find substring candidates by starting a sliding window from the beginning of the string.
         # Increase the window until a substring is found.
-        # Decrease the tail of the window until no longer a substring.
+        # Start a reverse window starting from the other end until a shortest is found. 
         # This is the smallest substring for that section.
-        # Save that part of the string then truncate the source.
-        # Begin again.
+        # Save that part of the string.
+        # Continue.
         start = 0
         end = 0
 
@@ -54,12 +54,14 @@ class Solution:
         while end < len(s):
             end += 1
             if self.is_substring(s[start:end], t):
-                while end >= start:
-                    if not self.is_substring(s[start:end], t):
-                        window = s[start - 1 : end]
+                new_start = end - len(t)
+                while new_start >= start:
+                    if self.is_substring(s[new_start:end], t):
+                        window = s[new_start : end]
                         if len(window) < len(shortest_substring):
                             shortest_substring = window
                         break
-                    start += 1
+                    new_start -= 1
+                start = new_start
 
         return shortest_substring
