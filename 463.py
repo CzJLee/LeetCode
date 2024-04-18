@@ -32,6 +32,7 @@ grid[i][j] is 0 or 1.
 There is exactly one island in grid.
 """
 
+
 class Solution:
     def islandPerimeter(self, grid: list[list[int]]) -> int:
         row_count = 0
@@ -43,7 +44,7 @@ class Solution:
                     row_count += 1
             if current == 1:
                 row_count += 1
-        
+
         col_count = 0
         for col in range(len(grid[0])):
             current = 0
@@ -55,3 +56,16 @@ class Solution:
                 row_count += 1
 
         return row_count + col_count
+
+class Solution:
+    def islandPerimeter(self, grid: list[list[int]]) -> int:
+        perimeter = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == 1:
+                    perimeter += 4
+                    if i > 0 and grid[i-1][j] == 1:
+                        perimeter -= 2
+                    if j > 0 and grid[i][j-1] == 1:
+                        perimeter -= 2
+        return perimeter
