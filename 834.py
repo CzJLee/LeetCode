@@ -49,45 +49,28 @@ class Solution:
         
         return tree
 
-
-    def bfs_memo(self, start, tree, dist_array):
-        """BFS starting at start, over tree, adding to dist array."""
-
-        queue = []
-        queue.append((start, 0))
-        seen = set()
-
-        while queue:
-            node, dist = queue.pop(0)
-            seen.add(node)
-            dist_array[start][node] = dist
-
-            # Early stopping dynamic programming part
-            # If we encounter a node we already have info for, we can fill out dist
-            if node < start:
-                for i in range(len(dist_array)):
-                    dist_array[start][i] = min(dist_array[start][node] + dist_array[node][i], dist_array[start][i])
-            else:
-                # Only add new searches if we haven't seen this node yet.
-                for neighbor in tree[node]:
-                    if neighbor not in seen:
-                        queue.append((neighbor, dist+1))
-
-
-
     def sumOfDistancesInTree(self, n: int, edges: list[list[int]]) -> list[int]:
-        """First use DFS to get distance from one node to all others. Then use properties of a tree to fill out an array that contains the distance from one node to any other node. Then fill out answer."""
-
-        # Let dist[i][j] be the distance from node i to node j. 
-        # Then dist[i][j] == dist[j][i]
-
-        # Build dist array
-        dist = [[float("inf")] * n for _ in range(n)]
+        # https://leetcode.com/problems/sum-of-distances-in-tree/solutions/1308366/c-solution-using-dfs-with-explanation-o-n-time-complexity/?envType=daily-question&envId=2024-05-08
 
         tree = self.build_tree(edges)
 
-        for i in range(n):
-            self.bfs_memo(i, tree, dist)
+        distances = [0] * n
+        num_nodes_in_subtree = [1] * n
 
-        answer = [sum(row) for row in dist]
-        return answer
+        def dfs(root, pre):
+            """This first DFS pass gets the distance from a root node to all other nodes."""
+            for i in tree[root]:
+                if i != pre:
+                    dfs(i, root)
+                    num_nodes_in_subtree[root] += num_nodes_in_subtree[i]
+                    distances[root] += distances[i] + num_nodes_in_subtree[i]
+
+        def dfs2(root, pre):
+            for i in tree[root]:
+                if i != pre:
+                    distances[i] = distances[root] - num_nodes_in_subtree[i] + n - num_nodes_in_subtree[i]
+                    dfs2(i, root)
+        dfs(0, -1)
+        dfs2(0, -1)
+
+        return distances
