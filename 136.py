@@ -28,11 +28,9 @@ Each element in the array appears twice except for one element which appears onl
 
 class Solution:
     def singleNumber(self, nums: list[int]) -> int:
-        seen = set()
-        for n in nums:
-            if n in seen:
-                seen.remove(n)
-            else:
-                seen.add(n)
+        val = 0
 
-        return seen.pop()
+        for n in nums:
+            val ^= n
+        
+        return n
