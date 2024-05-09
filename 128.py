@@ -24,24 +24,12 @@ Constraints:
 
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
-        if not nums:
-            return 0
-
-        sorted_nums = sorted(set(nums))
-
-        longest_sequence_length = 1
-
-        prev = sorted_nums.pop(0)
-
-        current_sequence_length = 1
-        for n in sorted_nums:
-            print(n)
-            if n == prev + 1:
-                current_sequence_length += 1
-                longest_sequence_length = max(longest_sequence_length, current_sequence_length)
-            else:
-                current_sequence_length = 1
-            
-            prev = n
-
-        return longest_sequence_length
+        nums = set(nums)
+        best = 0
+        for n in nums:
+            if n - 1 not in nums:
+                next = n + 1
+                while next in nums:
+                    next += 1
+                best = max(best, next - n)
+        return best
